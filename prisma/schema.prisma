@@ -1,0 +1,94 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String       @id @default(uuid()) // Unique identifier
+  name            String       // User's full name
+  email           String       @unique // Unique email address
+  password        String       // Hashed password
+  emailVerified   DateTime?    // Date of email verification, optional if unverified
+  profileImageUrl String?      // Optional profile image URL
+  createdAt       DateTime     @default(now()) // Creation timestamp
+  updatedAt       DateTime     @updatedAt // Last update timestamp
+  teams           TeamMember[] // Teams the user belongs to
+  createdTeams    Team[]       @relation("TeamCreator") // Teams created by the user
+}
+
+
+model emailVerificationTokens {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  token     String   @unique
+  expiresAt DateTime @db.Timestamp(3)
+}
+
+model passwordResetToken {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  token     String   @unique
+  expiresAt DateTime @db.Timestamp(3)
+}
+
+model Team {
+  id          String       @id // User-provided ID
+  name        String
+  destination String? // Changed from description to destination
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  creatorId   String
+  creator     User         @relation("TeamCreator", fields: [creatorId], references: [id])
+  members     TeamMember[]
+  expenses    Expense[]
+}
+
+model TeamMember {
+  id              String         @id @default(uuid())
+  userId          String
+  teamId          String
+  joinedAt        DateTime       @default(now())
+  user            User           @relation(fields: [userId], references: [id])
+  team            Team           @relation(fields: [teamId], references: [id])
+  paidAmount      Float          @default(0)
+  payableAmount   Float          @default(0)
+  createdExpenses Expense[]      @relation("ExpenseCreator")
+  expenseShares   ExpenseShare[]
+
+  @@unique([userId, teamId])
+}
+
+model Expense {
+  id        String         @id @default(uuid())
+  title     String
+  amount    Float
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  teamId    String
+  creatorId String
+  team      Team           @relation(fields: [teamId], references: [id])
+  creator   TeamMember     @relation("ExpenseCreator", fields: [creatorId], references: [id])
+  shares    ExpenseShare[]
+}
+
+model ExpenseShare {
+  id        String     @id @default(uuid())
+  expenseId String
+  memberId  String
+  amount    Float
+  expense   Expense    @relation(fields: [expenseId], references: [id])
+  member    TeamMember @relation(fields: [memberId], references: [id])
+
+  @@unique([expenseId, memberId])
+}
