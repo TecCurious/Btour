@@ -82,7 +82,7 @@ const AboutPage = () => {
         </div>
       </div> */}
 
-      <div className="flex bg-[#1B3A60] h-[100px] justify-between px-4"></div>
+      <div className="flex bg-[#1B3A60] h-[30px] justify-between px-4"></div>
     </>
   )
 }
