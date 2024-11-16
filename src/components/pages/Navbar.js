@@ -32,7 +32,7 @@ export const Navbar = () => {
             <Link href={"/"}>Home</Link>
           </li>
           {/* <li className="px-4">Home</li> */}
-          {/* <li className="px-4">About us</li> */}
+         <Link href={"/aboutus"}><li className="px-4">About us</li></Link> 
          { isLogin && <li className="px-4"><Link href={"/dashboard"}>Dashboard</Link></li>}
         </ul>
       </div>
