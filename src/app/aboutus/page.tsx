@@ -74,13 +74,7 @@ const AboutPage = () => {
         </div>
       </div>
 
-      {/* Simplified Stats */}
-      {/* <div className="bg-gray-50 px-[10%] py-8">
-        <div className="bg-white rounded-lg p-6 text-center">
-          <div className="text-3xl font-bold text-blue-500 mb-2">10K+ Trips Managed</div>
-          <p className="text-[#1B3A60]">Helping travelers focus on experiences, not expenses</p>
-        </div>
-      </div> */}
+      
 
       <div className="flex bg-[#1B3A60] h-[30px] justify-between px-4"></div>
     </>

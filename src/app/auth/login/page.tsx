@@ -56,6 +56,8 @@ const SignInForm = () => {
         localStorage.setItem("email", signInResponse.user.email);
         localStorage.setItem("id", signInResponse.user.id);
         router.push("/dashboard");
+        setEmail("");
+        setPassword("");
       } else {
         setMessage("Invalid credentials. Please try again.");
         // router.refresh();
