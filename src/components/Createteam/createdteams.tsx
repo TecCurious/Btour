@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { createdTeam } from "@/action/actions";
 import { Users, MapPin, Crown } from "lucide-react";
-
+import { BeatLoader } from "react-spinners";
 interface Team {
     id: string;
     name: string;
@@ -15,6 +15,7 @@ interface Team {
 const Createdteams = () => {
     const [email, setEmail] = useState<string>('');
     const [teams, setTeams] = useState<Team[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const creatorId = typeof window !== 'undefined' ? localStorage.getItem('id') || '' : '';
 
     useEffect(() => {
@@ -30,6 +31,7 @@ const Createdteams = () => {
                 try {
                     const createdteams = await createdTeam(creatorId);
                     setTeams(createdteams);
+                    setIsLoading(false);
                 } catch (error) {
                     console.error('Error fetching teams:', error);
                 }
@@ -38,6 +40,12 @@ const Createdteams = () => {
 
         fetchTeams();
     }, [email]);
+
+
+    if(isLoading){
+        return <div className="h-screen flex items-center justify-center"><BeatLoader/></div>
+      }
+    
 
     return (
         <div className="p-6 bg-gradient-to-b from-gray-50 to-gray-100 min-h-screen">

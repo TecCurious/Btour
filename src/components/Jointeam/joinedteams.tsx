@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { getJoinedTeamsForUser } from "@/action/actions";
-import { Users } from "lucide-react";
+import { Users,MapPin, } from "lucide-react";
+import { BeatLoader } from "react-spinners";
 
 interface Team {
   id: string;
@@ -15,6 +16,7 @@ interface Team {
 const Joinedteams = () => {
   const [email, setEmail] = useState<string>("");
   const [teams, setTeams] = useState<Team[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const userId =
     typeof window !== "undefined" ? localStorage.getItem("id") || "" : "";
 
@@ -31,6 +33,7 @@ const Joinedteams = () => {
         try {
           const teamsData = await getJoinedTeamsForUser(userId);
           setTeams(teamsData);
+          setIsLoading(false);
         } catch (error) {
           console.error("Error fetching teams:", error);
         }
@@ -39,6 +42,11 @@ const Joinedteams = () => {
 
     fetchTeams();
   }, [email]);
+
+  if(isLoading){
+    return <div className="h-screen flex items-center justify-center"><BeatLoader/></div>
+  }
+
 
   return (
     <div className="p-6 bg-gradient-to-b from-gray-50 to-gray-100 min-h-screen">
@@ -59,19 +67,19 @@ const Joinedteams = () => {
                     scope="col"
                     className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
                   >
-                    Team ID
+                    <span className="text-blue-600">#</span>Team ID
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
                   >
-                    Team Name
+                   <Users className="w-4 h-4 text-blue-600" /> Team Name
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
                   >
-                    Destination
+                   <MapPin className="w-4 h-4 text-blue-600" /> Destination
                   </th>
                   <th
                     scope="col"
