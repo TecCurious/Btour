@@ -47,7 +47,12 @@ const SignInForm = () => {
       console.log(signInResponse);
 
       if ("error" in signInResponse) {
-        return setError(signInResponse?.error);
+        setEmail("");
+        setPassword("");
+        return setMessage("Invalid details!");
+        
+        // return setError(signInResponse?.error);
+
       } else if ("success" in signInResponse) {
         return setMessage(signInResponse?.success);
       }
