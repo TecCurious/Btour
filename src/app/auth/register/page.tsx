@@ -1,10 +1,8 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-// import { signUp } from '../../action/signUp';
 import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Mail, User, Phone, Lock } from 'lucide-react';
 import Link from 'next/link';
-// import { registerUser } from '@/action/actions';
 import { registerUser } from '@/action/RegisterUser';
 
 const SignUpForm = () => {
@@ -21,13 +19,11 @@ const SignUpForm = () => {
 
   const router = useRouter();
 
-
   useEffect(() => {
     const storedEmail = localStorage.getItem("email");
     if (storedEmail) {
       router.push('/dashboard');
     }
-    
   }, [router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,51 +35,48 @@ const SignUpForm = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  if (formData.password !== formData.repassword) {
-    setMessage("Passwords do not match");
-    return;
-  }
-
-  setLoading(true);
-  // setMessage("Signing up...");
-
-  try {
-    const response = await registerUser({
-      name: formData.name,
-      email: formData.email,
-      password: formData.password,
-    });
-    if (response.error) {
-      setMessage(response.error);
-    } else {
-      setMessage(response.success);
-      // localStorage.setItem("id", response.user.id);
-      // localStorage.setItem("email", response.user.email);
-      // router.push('/dashboard');
+    e.preventDefault();
+    if (formData.password !== formData.repassword) {
+      setMessage("Passwords do not match");
+      return;
     }
-  } catch (error) {
-    console.log(error);
-    setMessage("An error occurred during sign up");
-  } finally {
-    setLoading(false);
-    setFormData({
-      email: '',
-      password: '',
-      repassword: '',
-      name: '',
-      phone: '',
-    })
-  }
-};
+
+    setLoading(true);
+
+    try {
+      const response = await registerUser({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      });
+      if (response.error) {
+        setMessage(response.error);
+      } else {
+        setMessage(response.success);
+      }
+    } catch (error) {
+      console.log(error);
+      setMessage("An error occurred during sign up");
+    } finally {
+      setLoading(false);
+      setFormData({
+        email: '',
+        password: '',
+        repassword: '',
+        name: '',
+        phone: '',
+      })
+    }
+  };
 
   return (
-    <div className="flex p-8 bg-gray-100 h-[91vh]">
-      
-      <div className='flex items-center justify-center w-[50%] '><img className='rounded-md' src="/image/bt.jpg" alt="" /></div>
-      <div className="w-full lg:w-1/2 flex flex-col justify-center p-8 lg:p-24">
-        <div className="max-w-md w-full mx-auto bg-white shadow-lg rounded-lg p-8">
-          <h2 className="text-3xl font-extrabold text-gray-900 text-center mb-6">Create your account</h2>
+    <div className="flex flex-col md:flex-row p-4 md:p-8 bg-gray-100 min-h-[91vh]">
+      <div className='hidden md:flex items-center justify-center w-full md:w-[50%]'>
+        <img className='rounded-md w-full max-w-lg' src="/image/bt.jpg" alt="" />
+      </div>
+      <div className="w-full md:w-1/2 flex flex-col justify-center p-4 md:p-8 lg:p-24">
+        <div className="max-w-md w-full mx-auto bg-white shadow-lg rounded-lg p-4 md:p-8">
+          <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 text-center mb-6">Create your account</h2>
           <form className="space-y-2" onSubmit={handleSubmit}>
             <div className="space-y-4">
               <div className="relative">
@@ -98,7 +91,7 @@ const SignUpForm = () => {
                     type="email"
                     autoComplete="email"
                     required
-                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
                     placeholder="you@example.com"
                     value={formData.email}
                     onChange={handleChange}
@@ -117,7 +110,7 @@ const SignUpForm = () => {
                     type="text"
                     autoComplete="name"
                     required
-                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
                     placeholder="John Doe"
                     value={formData.name}
                     onChange={handleChange}
@@ -137,7 +130,7 @@ const SignUpForm = () => {
                     type={showPassword ? "text" : "password"}
                     autoComplete="new-password"
                     required
-                    className="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
                     placeholder="••••••••"
                     value={formData.password}
                     onChange={handleChange}
@@ -163,7 +156,7 @@ const SignUpForm = () => {
                     type="password"
                     autoComplete="new-password"
                     required
-                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
                     placeholder="••••••••"
                     value={formData.repassword}
                     onChange={handleChange}
@@ -183,9 +176,9 @@ const SignUpForm = () => {
             </div>
           </form>
           <div className='flex items-center justify-center mt-4'>
-          <Link href={'/auth/login'}>
-            <h3 className="py-2 px-5 ">login?</h3>
-          </Link>
+            <Link href={'/auth/login'}>
+              <h3 className="py-2 px-5">login?</h3>
+            </Link>
           </div>
           {message && (
             <div className={`mt-4 text-center text-sm ${message.includes("error") ? "text-red-600" : "text-green-600"}`}>

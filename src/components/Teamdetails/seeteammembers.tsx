@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-// import { useRouter } from "next/navigation";
 import { getAllTeamMembers } from "@/action/actions";
 import { getTeamById } from "@/data/team";
 import { removeTeamMember } from "@/data/teamMenber";
@@ -28,7 +27,6 @@ interface TeamMember {
 }
 
 const Seeteammembers = (params: any) => {
-  // const router = useRouter();
   const teamid = params.teamid.params.team;
   const [teammembers, setTeammembers] = useState<TeamMember[] | string>([]);
   const [creatorId, setCreatorId] = useState<string | undefined>(undefined);
@@ -59,7 +57,6 @@ const Seeteammembers = (params: any) => {
     setCreatorName(team?.creator.name);
     const date = team?.createdAt.toDateString();
     setCreatedAt(date);
-    
   };
 
   const handleRemoveClick = (id: string, name: string) => {
@@ -81,76 +78,94 @@ const Seeteammembers = (params: any) => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto mt-10">
-      <h1 className="text-2xl font-semibold mb-6">{teamName}</h1>
+    <div className="w-full px-4 md:px-6">
+      <h1 className="text-xl md:text-2xl font-semibold mb-4">{teamName}</h1>
 
-      <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
-        <thead className="bg-gray-50">
-          <tr>
-            <th className="px-6 py-3 bg-gray-50 border-b text-left text-sm font-semibold text-gray-500 uppercase tracking-wider">
-              Team ID: {teamid}
-            </th>
-            <th className="px-6 py-3 bg-gray-50 border-b text-left text-sm font-semibold text-gray-500 uppercase tracking-wider">
-              Team Name: {teamName}
-            </th>
-            <th className="px-6 py-3 bg-gray-50 border-b text-left text-sm font-semibold text-gray-500 uppercase tracking-wider">
-              Creator: {creatorName}
-            </th>
-            <th className="px-6 py-3 bg-gray-50 border-b text-left text-sm font-semibold text-gray-500 uppercase tracking-wider">
-              Date: {createdAt}
-            </th>
-          </tr>
-        </thead>
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="py-3 px-6 border-b text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-              Member Name
-            </th>
-            <th className="py-3 px-6 border-b text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-              Member Email
-            </th>
-            <th className="py-3 px-6 border-b text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-              Paid Amount
-            </th>
-            <th className="py-3 px-6 border-b text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-              Payble Amount
-            </th>
-            {userId === creatorId && (
-              <th className="py-3 px-6 border-b text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                Actions
-              </th>
-            )}
-          </tr>
-        </thead>
-        <tbody>
-          {Array.isArray(teammembers) ? (
-            teammembers.map((teammem: TeamMember) => (
-              <tr key={teammem.id} className="hover:bg-gray-50">
-                <td className="py-4 px-6 border-b text-sm text-gray-700">{teammem.user.name}</td>
-                <td className="py-4 px-6 border-b text-sm text-gray-700">{teammem.user.email}</td>
-                <td className="py-4 px-6 border-b text-sm text-gray-700">{teammem.paidAmount}</td>
-                <td className="py-4 px-6 border-b text-sm text-red-500">{teammem.payableAmount}</td>
-                {userId === creatorId && teammem.user.id != creatorId && (
-                  <td className="py-4 px-6 border-b text-sm text-gray-700">
+      {/* Team Info Cards - Mobile Friendly */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4 text-sm">
+        <div className="bg-white p-3 rounded shadow-sm">
+          <p className="text-gray-500 text-xs">Creator</p>
+          <p className="font-medium truncate">{creatorName}</p>
+        </div>
+        <div className="bg-white p-3 rounded shadow-sm">
+          <p className="text-gray-500 text-xs">Date</p>
+          <p className="font-medium">{createdAt}</p>
+        </div>
+      </div>
+
+      {/* Desktop Table View */}
+      <div className="hidden md:block overflow-x-auto">
+        <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Member Name</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Paid</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Payable</th>
+              {userId === creatorId && (
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+              )}
+            </tr>
+          </thead>
+          <tbody>
+            {Array.isArray(teammembers) && teammembers.map((teammem: TeamMember) => (
+              <tr key={teammem.id} className="border-t border-gray-100">
+                <td className="px-4 py-3 text-sm">{teammem.user.name}</td>
+                <td className="px-4 py-3 text-sm">{teammem.user.email}</td>
+                <td className="px-4 py-3 text-sm">{teammem.paidAmount}</td>
+                <td className="px-4 py-3 text-sm text-red-500">{teammem.payableAmount}</td>
+                {userId === creatorId && teammem.user.id !== creatorId && (
+                  <td className="px-4 py-3 text-sm">
                     <button
-                      className="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
                       onClick={() => handleRemoveClick(teammem.id, teammem.user.name)}
+                      className="bg-red-700 text-white px-3 py-1 rounded-full text-xs hover:bg-red-800"
                     >
                       Remove
                     </button>
                   </td>
                 )}
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={6} className="text-center py-4 text-sm text-gray-600">
-                {teammembers}
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Mobile Card View */}
+      <div className="md:hidden space-y-3">
+        {Array.isArray(teammembers) && teammembers.map((teammem: TeamMember) => (
+          <div key={teammem.id} className="bg-white rounded-lg shadow-sm p-4">
+            <div className="flex justify-between items-start mb-2">
+              <div>
+                <h3 className="font-medium">{teammem.user.name}</h3>
+                <p className="text-sm text-gray-500 truncate">{teammem.user.email}</p>
+              </div>
+              {userId === creatorId && teammem.user.id !== creatorId && (
+                <button
+                  onClick={() => handleRemoveClick(teammem.id, teammem.user.name)}
+                  className="bg-red-700 text-white px-3 py-1 rounded-full text-xs hover:bg-red-800"
+                >
+                  Remove
+                </button>
+              )}
+            </div>
+            <div className="grid grid-cols-2 gap-2 mt-3">
+              <div className="bg-gray-50 p-2 rounded">
+                <p className="text-xs text-gray-500">Paid Amount</p>
+                <p className="font-medium">{teammem.paidAmount}</p>
+              </div>
+              <div className="bg-gray-50 p-2 rounded">
+                <p className="text-xs text-gray-500">Payable Amount</p>
+                <p className="font-medium text-red-500">{teammem.payableAmount}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+        {!Array.isArray(teammembers) && (
+          <div className="text-center py-4 text-sm text-gray-600">
+            {teammembers}
+          </div>
+        )}
+      </div>
 
       <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <AlertDialogContent>

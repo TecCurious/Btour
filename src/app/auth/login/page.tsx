@@ -21,12 +21,10 @@ const SignInForm = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [message, setMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const [message, setMessage] = useState<string | undefined>(undefined);
-  // const [user, setUser] = useState(null); // State for user data
 
   useEffect(() => {
     const storedEmail = localStorage.getItem("email");
@@ -38,7 +36,6 @@ const SignInForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // setMessage("Signing in...");
 
     try {
       const signInResponse = await LoginUser({ email, password });
@@ -50,14 +47,10 @@ const SignInForm = () => {
         setEmail("");
         setPassword("");
         return setMessage("Invalid details!");
-        
-        // return setError(signInResponse?.error);
-
       } else if ("success" in signInResponse) {
         return setMessage(signInResponse?.success);
       }
       if ("user" in signInResponse) {
-        // setUser(email); // Store user data in state
         localStorage.setItem("email", signInResponse.user.email);
         localStorage.setItem("id", signInResponse.user.id);
         router.push("/dashboard");
@@ -65,20 +58,9 @@ const SignInForm = () => {
         setPassword("");
       } else {
         setMessage("Invalid credentials. Please try again.");
-        // router.refresh();
         setEmail("");
         setPassword("");
       }
-
-      // if (signInResponse?.error) {
-      //   // setUser(email); // Store user data in state
-      //   localStorage.setItem("email", signInResponse.user.email);
-      //   localStorage.setItem("id", signInResponse.user.id);
-      //   router.push("/dashboard");
-      // } else {
-      //   setMessage("Invalid credentials. Please try again.");
-      //   router.refresh();
-      // }
     } catch (error) {
       console.log(error);
       setMessage("An error occurred. Please try again.");
@@ -89,18 +71,17 @@ const SignInForm = () => {
   };
 
   return (
-    <div className="flex p-8 bg-gray-100 min-h-[91vh]">
-      <div className="flex items-center justify-center w-[50%] ">
-        <img className="rounded-md" src="/image/bt.jpg" alt="" />
+    <div className="flex flex-col md:flex-row p-4 md:p-8 bg-gray-100 min-h-[91vh]">
+      <div className="hidden md:flex items-center justify-center w-full md:w-[50%]">
+        <img className="rounded-md w-full max-w-lg" src="/image/bt.jpg" alt="" />
       </div>
 
-      {/* Right side with form */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-center p-8 lg:p-24">
-        <div className="max-w-md w-full mx-auto bg-white shadow-lg rounded-lg p-8">
-          <h2 className="text-3xl font-extrabold text-gray-900 text-center mb-6">
+      <div className="w-full md:w-1/2 flex flex-col justify-center p-4 md:p-8 lg:p-24">
+        <div className="max-w-md w-full mx-auto bg-white shadow-lg rounded-lg p-4 md:p-8">
+          <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 text-center mb-6">
             Sign in to your account
           </h2>
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
             <div>
               <label
                 htmlFor="email"
@@ -118,7 +99,7 @@ const SignInForm = () => {
                   type="email"
                   autoComplete="email"
                   required
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
                   placeholder="you@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -143,7 +124,7 @@ const SignInForm = () => {
                   type={showPassword ? "text" : "password"}
                   autoComplete="current-password"
                   required
-                  className="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -174,7 +155,7 @@ const SignInForm = () => {
           </form>
           <div className="flex items-center justify-center mt-4">
             <Link href={"/auth/register"}>
-              <h3 className="py-2 px-5 ">register?</h3>
+              <h3 className="py-2 px-5">register?</h3>
             </Link>
           </div>
 

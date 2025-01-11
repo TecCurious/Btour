@@ -90,29 +90,29 @@ const Createpayment = (params: any) => {
     };
 
     return (
-        <div className="max-w-4xl mx-auto mt-12 p-6 bg-white shadow-md rounded-lg">
-            <h1 className="text-3xl font-bold mb-6 text-center">Create a New Expense</h1>
+        <div className="max-w-4xl mx-auto mt-4 sm:mt-12 p-4 sm:p-6 bg-white shadow-md rounded-lg">
+            <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center">Create a New Expense</h1>
             {true ? (
-                <div className="flex flex-col items-center space-y-6">
+                <div className="flex flex-col items-center space-y-4 sm:space-y-6">
                     <input
                         type="text"
                         value={expenseTitle}
-                        className="w-full max-w-xs px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-black"
+                        className="w-full sm:max-w-xs px-3 sm:px-4 py-2 text-sm sm:text-base border-2 border-gray-300 rounded-lg focus:outline-none focus:border-black"
                         placeholder="Enter Expense Title"
                         onChange={handleExpenseTitleChange}
                     />
                     <input
                         type="number"
                         value={amount || ''}
-                        className="w-full max-w-xs px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-black"
+                        className="w-full sm:max-w-xs px-3 sm:px-4 py-2 text-sm sm:text-base border-2 border-gray-300 rounded-lg focus:outline-none focus:border-black"
                         placeholder="Enter Amount"
                         onChange={handleAmountChange}
                     />
                     {validationError && (
-                        <p className="text-red-500 text-sm">{validationError}</p>
+                        <p className="text-red-500 text-xs sm:text-sm">{validationError}</p>
                     )}
                     <button
-                        className="w-full max-w-xs px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-500 disabled:bg-blue-300"
+                        className="w-full sm:max-w-xs px-4 sm:px-6 py-2 bg-blue-600 text-white text-sm sm:text-base font-semibold rounded-lg hover:bg-blue-500 disabled:bg-blue-300"
                         onClick={handleSubmit}
                         disabled={isCreating}
                     >
@@ -120,12 +120,12 @@ const Createpayment = (params: any) => {
                     </button>
                 </div>
             ) : (
-                <div className="text-center text-lg font-semibold text-red-600">
+                <div className="text-center text-base sm:text-lg font-semibold text-red-600">
                     <p>You don't have access to add expenses</p>
                 </div>
             )}
             {message && (
-                <div className="mt-6 text-center text-lg font-semibold text-green-600">
+                <div className="mt-4 sm:mt-6 text-center text-base sm:text-lg font-semibold text-green-600">
                     {message}
                 </div>
             )}

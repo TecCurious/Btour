@@ -12,12 +12,15 @@ import {
     UserPlus, 
     LogOut,
     Layout,
-    PlusCircle
+    PlusCircle,
+    Menu,
+    X
 } from "lucide-react";
 
 export default function Home() {
     const [user, setUser] = useState<string | null>(null);
     const [teamType, setTeamType] = useState('create');
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -34,14 +37,36 @@ export default function Home() {
         router.push("/");
     };
 
+    const handleNavClick = (type: string) => {
+        setTeamType(type);
+        setIsSidebarOpen(false);
+    };
+
     if (user === null) {
         return <></>;
     }
 
     return (
-        <div className="flex min-h-[calc(100vh-64px)] bg-gray-50 z-0">
-            {/* Left-side Dashboard - Fixed */}
-            <div className="w-64 fixed left-0 bg-white  text-slate-700 h-[calc(100vh-64px)] p-5">
+        <div className="relative min-h-[calc(100vh-64px)] bg-gray-50">
+            {/* Mobile Menu Toggle - Adjusted position */}
+            <button
+                className="md:hidden fixed top-20 left-2 z-50 p-2 bg-white rounded-lg shadow-lg"
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            >
+                {isSidebarOpen ? (
+                    <X className="w-6 h-6 text-gray-600" />
+                ) : (
+                    <Menu className="w-6 h-6 text-gray-600" />
+                )}
+            </button>
+
+            {/* Rest of the component remains the same */}
+            <div className={`
+                fixed left-0 bg-white text-slate-700 h-[calc(100vh-64px)] w-64 p-5
+                transition-transform duration-300 ease-in-out z-40
+                md:translate-x-0
+                ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+            `}>
                 <div className="flex items-center gap-3 mb-8">
                     <Layout className="w-6 h-6" />
                     <h2 className="text-xl font-bold">Team Management</h2>
@@ -50,8 +75,8 @@ export default function Home() {
                 <div className="space-y-3">
                     <button
                         className={`w-full flex items-center gap-3 p-3 rounded transition-colors
-                            hover:bg-gray-50  ${teamType === 'create' ? "bg-blue-50 text-blue-600" : ""}`}
-                        onClick={() => setTeamType('create')}
+                            hover:bg-gray-50 ${teamType === 'create' ? "bg-blue-50 text-blue-600" : ""}`}
+                        onClick={() => handleNavClick('create')}
                     >
                         <PlusCircle className="w-5 h-5" />
                         <span>Create Team</span>
@@ -59,8 +84,8 @@ export default function Home() {
 
                     <button
                         className={`w-full flex items-center gap-3 p-3 rounded transition-colors
-                            hover:bg-gray-50  ${teamType === 'join' ? "bg-blue-50 text-blue-600" : ""}`}
-                        onClick={() => setTeamType('join')}
+                            hover:bg-gray-50 ${teamType === 'join' ? "bg-blue-50 text-blue-600" : ""}`}
+                        onClick={() => handleNavClick('join')}
                     >
                         <UserPlus className="w-5 h-5" />
                         <span>Join Team</span>
@@ -69,7 +94,7 @@ export default function Home() {
                     <button
                         className={`w-full flex items-center gap-3 p-3 rounded transition-colors
                             hover:bg-gray-50 ${teamType === 'show' ? "bg-blue-50 text-blue-600" : ""}`}
-                        onClick={() => setTeamType('show')}
+                        onClick={() => handleNavClick('show')}
                     >
                         <Users className="w-5 h-5" />
                         <span>All Teams</span>
@@ -87,21 +112,35 @@ export default function Home() {
                 </button>
             </div>
 
-            {/* Main Content Area - Scrollable with left margin */}
-            <div className="flex-1 ml-64 min-h-[calc(100vh-64px)] overflow-y-auto p-6">
-                {teamType === 'join' ? (
-                    <>
-                        <Joinedteam />
-                        <Joinedteams />
-                    </>
-                ) : teamType === 'create' ? (
-                    <>
-                        <Createteam />
-                        <Createdteams />
-                    </>
-                ) : teamType === 'show' ? (
-                    <Allteams />
-                ) : null}
+            {/* Overlay for mobile */}
+            {isSidebarOpen && (
+                <div 
+                    className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+                    onClick={() => setIsSidebarOpen(false)}
+                />
+            )}
+
+            {/* Main Content Area */}
+            <div className={`
+                min-h-[calc(100vh-64px)] overflow-y-auto transition-all duration-300
+                md:ml-64 p-4 md:p-6
+                ${isSidebarOpen ? 'ml-64' : 'ml-0'}
+            `}>
+                <div className="mt-14 md:mt-0">
+                    {teamType === 'join' ? (
+                        <>
+                            <Joinedteam />
+                            <Joinedteams />
+                        </>
+                    ) : teamType === 'create' ? (
+                        <>
+                            <Createteam />
+                            <Createdteams />
+                        </>
+                    ) : teamType === 'show' ? (
+                        <Allteams />
+                    ) : null}
+                </div>
             </div>
         </div>
     );

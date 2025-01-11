@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { getJoinedTeamsForUser } from "@/action/actions";
-import { Users,MapPin, } from "lucide-react";
+import { Users, MapPin } from "lucide-react";
 import { BeatLoader } from "react-spinners";
 
 interface Team {
@@ -43,23 +43,65 @@ const Joinedteams = () => {
     fetchTeams();
   }, [email]);
 
-  if(isLoading){
-    return <div className="h-screen flex items-center justify-center"><BeatLoader/></div>
+  if (isLoading) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <BeatLoader />
+      </div>
+    );
   }
 
-
   return (
-    <div className="p-6 bg-gradient-to-b from-gray-50 to-gray-100 min-h-screen">
+    <div className="p-4 md:p-6 bg-gradient-to-b from-gray-50 to-gray-100 min-h-screen">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-center gap-3 mb-8">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-3 mb-8">
           <Users className="w-8 h-8 text-blue-600" />
-          <h1 className="text-4xl font-bold text-gray-800">
+          <h1 className="text-2xl md:text-4xl font-bold text-gray-800 text-center md:text-left">
             Teams Joined By You
           </h1>
         </div>
 
         <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
-          <div className="overflow-x-auto">
+          {/* Mobile View - Card Layout */}
+          <div className="block md:hidden">
+            {teams.length === 0 ? (
+              <div className="p-6 text-center text-gray-500">
+                No teams joined yet
+              </div>
+            ) : (
+              teams.map((team) => (
+                <div
+                  key={team.id}
+                  className="p-4 border-b border-gray-200 hover:bg-blue-50 transition-colors duration-200"
+                >
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-semibold text-gray-600">ID:</span>
+                      <span className="text-sm text-gray-900">{team.id}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Users className="w-4 h-4 text-blue-600" />
+                      <span className="text-sm text-gray-700">{team.name}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <MapPin className="w-4 h-4 text-blue-600" />
+                      <span className="text-sm text-gray-700">
+                        {team.destination || "—"}
+                      </span>
+                    </div>
+                    <Link href={`/${team.id}/details`}>
+                      <button className="w-full mt-2 inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200">
+                        View Details
+                      </button>
+                    </Link>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* Desktop View - Table Layout */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -73,13 +115,13 @@ const Joinedteams = () => {
                     scope="col"
                     className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
                   >
-                   <Users className="w-4 h-4 text-blue-600" /> Team Name
+                    <Users className="w-4 h-4 text-blue-600" /> Team Name
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
                   >
-                   <MapPin className="w-4 h-4 text-blue-600" /> Destination
+                    <MapPin className="w-4 h-4 text-blue-600" /> Destination
                   </th>
                   <th
                     scope="col"
@@ -92,10 +134,7 @@ const Joinedteams = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {teams.length === 0 ? (
                   <tr>
-                    <td
-                      colSpan={4}
-                      className="px-6 py-8 text-center text-gray-500"
-                    >
+                    <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
                       No teams joined yet
                     </td>
                   </tr>
