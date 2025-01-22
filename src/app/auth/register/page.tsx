@@ -86,7 +86,7 @@ const SignUpForm = () => {
       } else {
         setMessage("🎉 Success! Your account has been created. You'll be redirected to login shortly.");
         setTimeout(() => {
-          // router.push('/auth/login');
+          
         }, 2000);
       }
     } catch (error) {
