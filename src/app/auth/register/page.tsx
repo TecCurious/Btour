@@ -84,13 +84,13 @@ const SignUpForm = () => {
       if (response.error) {
         setMessage(`Registration failed: ${response.error}..`);
       } else {
-        setMessage("🎉 Success! Your account has been created. You'll be redirected to login shortly.");
+        setMessage("🎉 Success! account has been created! verification link sent on email.");
         setTimeout(() => {
           
         }, 2000);
       }
     } catch (error) {
-      setMessage("Oops! Something went wrong during sign up. Please try again or contact support if the issue persists.");
+      setMessage("Oops! Something went wrong during sign up.");
     } finally {
       setLoading(false);
       setFormData({
