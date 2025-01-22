@@ -16,6 +16,7 @@ const SignUpForm = () => {
   const [message, setMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
 
   const router = useRouter();
 
@@ -26,18 +27,49 @@ const SignUpForm = () => {
     }
   }, [router]);
 
+  const validatePassword = (password: string) => {
+    if (password.length < 8) {
+      return "Password must be at least 8 characters long";
+    }
+    if (!/[A-Z]/.test(password)) {
+      return "Password must contain at least one uppercase letter";
+    }
+    if (!/[a-z]/.test(password)) {
+      return "Password must contain at least one lowercase letter";
+    }
+    if (!/[0-9]/.test(password)) {
+      return "Password must contain at least one number";
+    }
+    if (!/[!@#$%^&*]/.test(password)) {
+      return "Password must contain at least one special character (!@#$%^&*)";
+    }
+    return "";
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prevData => ({
       ...prevData,
       [name]: value
     }));
+
+    if (name === 'password') {
+      const error = validatePassword(value);
+      setPasswordError(error);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    const passwordValidationError = validatePassword(formData.password);
+    if (passwordValidationError) {
+      setMessage(passwordValidationError);
+      return;
+    }
+
     if (formData.password !== formData.repassword) {
-      setMessage("Passwords do not match");
+      setMessage("Passwords do not match. Please try again.");
       return;
     }
 
@@ -50,13 +82,15 @@ const SignUpForm = () => {
         password: formData.password,
       });
       if (response.error) {
-        setMessage(response.error);
+        setMessage(`Registration failed: ${response.error}..`);
       } else {
-        setMessage(response.success);
+        setMessage("🎉 Success! Your account has been created. You'll be redirected to login shortly.");
+        setTimeout(() => {
+          // router.push('/auth/login');
+        }, 2000);
       }
     } catch (error) {
-      console.log(error);
-      setMessage("An error occurred during sign up");
+      setMessage("Oops! Something went wrong during sign up. Please try again or contact support if the issue persists.");
     } finally {
       setLoading(false);
       setFormData({
@@ -65,7 +99,7 @@ const SignUpForm = () => {
         repassword: '',
         name: '',
         phone: '',
-      })
+      });
     }
   };
 
@@ -143,6 +177,9 @@ const SignUpForm = () => {
                     {showPassword ? <EyeOff className="h-5 w-5 text-gray-400" /> : <Eye className="h-5 w-5 text-gray-400" />}
                   </button>
                 </div>
+                {passwordError && (
+                  <p className="mt-1 text-sm text-red-600">{passwordError}</p>
+                )}
               </div>
               <div className="relative">
                 <label htmlFor="repassword" className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
@@ -168,7 +205,7 @@ const SignUpForm = () => {
             <div>
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || !!passwordError}
                 className="w-full mt-6 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-500 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400 disabled:cursor-not-allowed transition-colors duration-200"
               >
                 {loading ? 'Signing up...' : 'Sign up'}
@@ -181,7 +218,7 @@ const SignUpForm = () => {
             </Link>
           </div>
           {message && (
-            <div className={`mt-4 text-center text-sm ${message.includes("error") ? "text-red-600" : "text-green-600"}`}>
+            <div className={`mt-4 text-center text-sm ${message.includes("Success") ? "text-green-600" : "text-red-600"}`}>
               {message}
             </div>
           )}

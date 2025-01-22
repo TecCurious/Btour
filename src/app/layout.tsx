@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import Layout from './provider';
 import Navbar from '@/components/pages/Navbar';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -22,7 +21,7 @@ export default function RootLayout({
         <div className='sticky top-0 bg-white z-10'>
       <Navbar />
       </div>
-        <Layout>{children}</Layout>
+      {children}
         
       </body>
     </html>
